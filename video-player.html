@@ -1,0 +1,824 @@
+<!-- video-player.html - تحديث الروابط -->
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مشغل الفيديو | تعلم تطوير الويب</title>
+    <link rel="icon" type="image/x-icon" href="https://img.icons8.com/color/48/000000/book--v1.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
+        body { background: #f5f5f5; }
+
+        /* الشريط العلوي */
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 15px 40px; display: flex; justify-content: space-between; align-items: center;
+            color: white; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 15px rgba(0,0,0,0.2);
+        }
+        .navbar a { text-decoration: none; color: white; }
+        .logo { 
+            font-size: 24px; font-weight: bold; 
+            display: flex; align-items: center; gap: 10px;
+        }
+        .back-btn { 
+            background: rgba(255,255,255,0.2); padding: 8px 20px; 
+            border-radius: 20px; font-size: 14px; transition: 0.3s;
+            display: inline-flex; align-items: center; gap: 5px;
+            cursor: pointer;
+        }
+        .back-btn:hover { background: rgba(255,255,255,0.3); }
+
+        /* حاوية المشغل */
+        .player-container {
+            display: flex;
+            height: calc(100vh - 80px);
+            overflow: hidden;
+        }
+
+        /* قسم الفيديو الرئيسي */
+        .video-section {
+            flex: 2;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .video-wrapper {
+            background: #000;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            aspect-ratio: 16/9;
+        }
+
+        .video-placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #1a1a1a, #2d2d2d);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .video-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .video-wrapper:hover .video-controls {
+            opacity: 1;
+        }
+
+        .control-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.3s;
+        }
+
+        .control-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .progress-bar {
+            flex: 1;
+            height: 5px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 5px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .progress {
+            width: 35%;
+            height: 100%;
+            background: #ff6b6b;
+            border-radius: 5px;
+            position: relative;
+        }
+
+        .time {
+            color: white;
+            font-size: 14px;
+        }
+
+        /* معلومات الفيديو */
+        .video-info {
+            margin-top: 20px;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .video-title {
+            font-size: 24px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .video-meta {
+            display: flex;
+            gap: 20px;
+            color: #666;
+            font-size: 14px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .video-description {
+            margin-top: 15px;
+            line-height: 1.6;
+            color: #555;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .primary-btn {
+            background: #667eea;
+            color: white;
+        }
+
+        .primary-btn:hover {
+            background: #5a6fd1;
+        }
+
+        .success-btn {
+            background: #4caf50;
+            color: white;
+        }
+
+        .success-btn:hover {
+            background: #45a049;
+        }
+
+        .warning-btn {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .warning-btn:hover {
+            background: #e0a800;
+        }
+
+        /* الشريط الجانبي - قائمة الدروس */
+        .playlist-section {
+            flex: 1;
+            background: white;
+            border-left: 1px solid #ddd;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .playlist-header {
+            margin-bottom: 20px;
+        }
+
+        .course-title-small {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 5px;
+            cursor: pointer;
+        }
+        .course-title-small:hover {
+            color: #667eea;
+        }
+
+        .course-progress {
+            background: #f0f0f0;
+            height: 8px;
+            border-radius: 4px;
+            margin: 15px 0;
+        }
+
+        .progress-fill {
+            width: 35%;
+            height: 100%;
+            background: #667eea;
+            border-radius: 4px;
+        }
+
+        .playlist-items {
+            list-style: none;
+        }
+
+        .playlist-item {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .playlist-item:hover {
+            background: #f8f9fa;
+        }
+
+        .playlist-item.active {
+            background: #e8f0fe;
+            border-right: 4px solid #667eea;
+        }
+
+        .item-number {
+            width: 30px;
+            height: 30px;
+            background: #f0f0f0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .playlist-item.active .item-number {
+            background: #667eea;
+            color: white;
+        }
+
+        .item-info {
+            flex: 1;
+        }
+
+        .item-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .item-duration {
+            font-size: 12px;
+            color: #888;
+        }
+
+        .item-status {
+            color: #4caf50;
+        }
+
+        .completed .item-number {
+            background: #4caf50;
+            color: white;
+        }
+
+        /* نافذة الملاحظات */
+        .notes-section {
+            margin-top: 20px;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .notes-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .add-note {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 13px;
+        }
+
+        .notes-list {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .note-item {
+            background: #f9f9f9;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-right: 3px solid #667eea;
+        }
+
+        .note-time {
+            font-size: 11px;
+            color: #667eea;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .note-text {
+            font-size: 13px;
+            color: #555;
+            line-height: 1.5;
+        }
+
+        .note-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 8px;
+            font-size: 11px;
+        }
+
+        .note-actions span {
+            color: #888;
+            cursor: pointer;
+        }
+
+        .note-actions span:hover {
+            color: #667eea;
+        }
+
+        @media (max-width: 768px) {
+            .player-container {
+                flex-direction: column;
+                height: auto;
+            }
+            
+            .navbar {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <a href="index.html" class="logo">
+                <i class="fas fa-graduation-cap"></i> منصتي
+            </a>
+            <div class="back-btn" onclick="goBack()">
+                <i class="fas fa-arrow-right"></i> العودة
+            </div>
+        </div>
+        <div id="user-area"></div>
+    </nav>
+
+    <div class="player-container">
+        <!-- قسم الفيديو الرئيسي -->
+        <div class="video-section">
+            <div class="video-wrapper">
+                <div class="video-placeholder" onclick="playVideo()">
+                    <i class="fas fa-play-circle" style="font-size: 80px; opacity: 0.5;"></i>
+                    <span style="position: absolute; bottom: 50%; color: #666;" id="videoStatus">اضغط للتشغيل</span>
+                    
+                    <!-- عناصر التحكم -->
+                    <div class="video-controls">
+                        <button class="control-btn" onclick="togglePlay(event)"><i class="fas fa-play" id="playIcon"></i></button>
+                        <button class="control-btn" onclick="toggleMute(event)"><i class="fas fa-volume-up" id="muteIcon"></i></button>
+                        <div class="progress-bar" onclick="seekVideo(event)">
+                            <div class="progress" id="videoProgress" style="width: 0%"></div>
+                        </div>
+                        <span class="time" id="timeDisplay">00:00 / 08:15</span>
+                        <button class="control-btn" onclick="toggleFullscreen(event)"><i class="fas fa-expand"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- معلومات الفيديو -->
+            <div class="video-info">
+                <h2 class="video-title" id="videoTitle">
+                    <i class="fas fa-play-circle" style="color: #667eea;"></i>
+                    الدرس 3: تثبيت أدوات العمل (VS Code)
+                </h2>
+                <div class="video-meta">
+                    <span><i class="far fa-clock"></i> المدة: 08:15</span>
+                    <span><i class="fas fa-eye"></i> 1,234 مشاهد</span>
+                    <span><i class="far fa-calendar"></i> 15 فبراير 2026</span>
+                </div>
+                <div class="video-description">
+                    <p>في هذا الدرس سنتعلم كيفية تثبيت وتجهيز بيئة العمل الخاصة بتطوير الويب باستخدام محرر النصوص VS Code وأهم الإضافات المفيدة.</p>
+                </div>
+                
+                <!-- أزرار الإجراءات -->
+                <div class="action-buttons">
+                    <button class="action-btn primary-btn" onclick="previousLesson()">
+                        <i class="fas fa-arrow-right"></i> الدرس السابق
+                    </button>
+                    <button class="action-btn success-btn" onclick="nextLesson()">
+                        الدرس التالي <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <button class="action-btn warning-btn" onclick="markAsCompleted()">
+                        <i class="fas fa-check-circle"></i> تحديد كمكتمل
+                    </button>
+                    <button class="action-btn primary-btn" onclick="goToCourseDetails()">
+                        <i class="fas fa-info-circle"></i> تفاصيل الدورة
+                    </button>
+                </div>
+            </div>
+
+            <!-- قسم الملاحظات -->
+            <div class="notes-section">
+                <div class="notes-header">
+                    <h3><i class="fas fa-sticky-note"></i> ملاحظاتي</h3>
+                    <button class="add-note" onclick="addNote()">
+                        <i class="fas fa-plus"></i> إضافة ملاحظة
+                    </button>
+                </div>
+                <div class="notes-list" id="notesList">
+                    <!-- الملاحظات تضاف هنا -->
+                </div>
+            </div>
+        </div>
+
+        <!-- الشريط الجانبي - قائمة الدروس -->
+        <div class="playlist-section">
+            <div class="playlist-header">
+                <h3 class="course-title-small" onclick="goToCourseDetails()">تعلم تطوير الويب الشامل</h3>
+                <div class="course-progress">
+                    <div class="progress-fill" id="courseProgressFill" style="width: 35%"></div>
+                </div>
+                <span style="font-size: 12px; color: #666;">تقدم الدورة: <span id="progressPercentage">35</span>%</span>
+            </div>
+
+            <ul class="playlist-items">
+                <!-- القسم 1 -->
+                <li style="padding: 10px; background: #f5f5f5; border-radius: 5px; margin: 10px 0; font-weight: bold;">
+                    <i class="fas fa-folder-open"></i> القسم 1: المقدمة والأساسيات
+                </li>
+                
+                <li class="playlist-item completed" onclick="playSpecificLesson(1)">
+                    <span class="item-number"><i class="fas fa-check"></i></span>
+                    <div class="item-info">
+                        <div class="item-title">مرحباً بك في الدورة</div>
+                        <div class="item-duration">05:00</div>
+                    </div>
+                    <span class="item-status"><i class="fas fa-check-circle"></i></span>
+                </li>
+                
+                <li class="playlist-item completed" onclick="playSpecificLesson(2)">
+                    <span class="item-number"><i class="fas fa-check"></i></span>
+                    <div class="item-info">
+                        <div class="item-title">كيف يعمل الويب؟</div>
+                        <div class="item-duration">12:30</div>
+                    </div>
+                    <span class="item-status"><i class="fas fa-check-circle"></i></span>
+                </li>
+                
+                <li class="playlist-item active" onclick="playSpecificLesson(3)">
+                    <span class="item-number">3</span>
+                    <div class="item-info">
+                        <div class="item-title">تثبيت أدوات العمل (VS Code)</div>
+                        <div class="item-duration">08:15</div>
+                    </div>
+                    <span class="item-status"><i class="fas fa-play" style="color: #667eea;"></i></span>
+                </li>
+
+                <!-- القسم 2 -->
+                <li style="padding: 10px; background: #f5f5f5; border-radius: 5px; margin: 10px 0; font-weight: bold;">
+                    <i class="fas fa-folder"></i> القسم 2: لغة HTML
+                </li>
+                
+                <li class="playlist-item" onclick="checkLessonAccess(4)">
+                    <span class="item-number">4</span>
+                    <div class="item-info">
+                        <div class="item-title">هيكلية الصفحة (Structure)</div>
+                        <div class="item-duration">15:00</div>
+                    </div>
+                    <span class="item-status"><i class="fas fa-lock" style="color: #aaa;"></i></span>
+                </li>
+                
+                <li class="playlist-item" onclick="checkLessonAccess(5)">
+                    <span class="item-number">5</span>
+                    <div class="item-info">
+                        <div class="item-title">الروابط والصور</div>
+                        <div class="item-duration">20:45</div>
+                    </div>
+                    <span class="item-status"><i class="fas fa-lock" style="color: #aaa;"></i></span>
+                </li>
+            </ul>
+            
+            <!-- روابط سريعة -->
+            <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee;">
+                <h4 style="font-size: 14px; margin-bottom: 10px;">روابط سريعة</h4>
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <a href="index.html" style="color: #667eea; text-decoration: none; font-size: 13px;">🏠 الرئيسية</a>
+                    <a href="#" onclick="goToProfile()" style="color: #667eea; text-decoration: none; font-size: 13px;">👤 ملفي الشخصي</a>
+                    <a href="#" onclick="goToDashboard()" style="color: #667eea; text-decoration: none; font-size: 13px;" id="dashboardLink">📊 لوحة التحكم</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // متغيرات الحالة
+        let currentLesson = 3;
+        let isPlaying = false;
+        let isMuted = false;
+        let completedLessons = [1, 2];
+
+        window.onload = function() {
+            updateUserArea();
+            loadNotes();
+            updateProgress();
+            checkUserRole();
+            
+            // التحقق من وجود درس محدد في الرابط
+            const urlParams = new URLSearchParams(window.location.search);
+            const lessonId = urlParams.get('lesson');
+            if (lessonId) {
+                currentLesson = parseInt(lessonId);
+                updateLessonDisplay();
+            }
+        }
+
+        function updateUserArea() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const userArea = document.getElementById('user-area');
+
+            if (isLoggedIn === 'true') {
+                const userName = localStorage.getItem('userName');
+                userArea.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 10px; cursor: pointer;" onclick="goToProfile()">
+                        <span style="font-weight:bold;">👋 ${userName}</span>
+                        <img src="https://i.pravatar.cc/40?u=${userName}" style="width: 40px; height: 40px; border-radius: 50%;">
+                    </div>
+                `;
+            } else {
+                window.location.href = 'login.html';
+            }
+        }
+
+        function goToProfile() {
+            const userRole = localStorage.getItem('userRole');
+            if (userRole === 'مدرب') {
+                window.location.href = 'instructor-dashboard.html';
+            } else {
+                window.location.href = 'profile.html';
+            }
+        }
+
+        function goToDashboard() {
+            const userRole = localStorage.getItem('userRole');
+            if (userRole === 'مدرب') {
+                window.location.href = 'instructor-dashboard.html';
+            } else {
+                window.location.href = 'profile.html';
+            }
+        }
+
+        function checkUserRole() {
+            const userRole = localStorage.getItem('userRole');
+            const dashboardLink = document.getElementById('dashboardLink');
+            
+            if (userRole === 'مدرب') {
+                dashboardLink.innerHTML = '📊 لوحة تحكم المدرب';
+            }
+        }
+
+        function goBack() {
+            window.history.back();
+        }
+
+        function goToCourseDetails() {
+            window.location.href = 'course-details.html';
+        }
+
+        function playVideo() {
+            isPlaying = !isPlaying;
+            const playIcon = document.getElementById('playIcon');
+            const videoStatus = document.getElementById('videoStatus');
+            
+            if (isPlaying) {
+                playIcon.className = 'fas fa-pause';
+                videoStatus.textContent = 'جاري التشغيل...';
+            } else {
+                playIcon.className = 'fas fa-play';
+                videoStatus.textContent = 'متوقف';
+            }
+        }
+
+        function togglePlay(event) {
+            event.stopPropagation();
+            playVideo();
+        }
+
+        function toggleMute(event) {
+            event.stopPropagation();
+            isMuted = !isMuted;
+            const muteIcon = document.getElementById('muteIcon');
+            muteIcon.className = isMuted ? 'fas fa-volume-mute' : 'fas fa-volume-up';
+        }
+
+        function toggleFullscreen(event) {
+            event.stopPropagation();
+            const videoWrapper = document.querySelector('.video-wrapper');
+            if (!document.fullscreenElement) {
+                videoWrapper.requestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        function seekVideo(event) {
+            event.stopPropagation();
+            const progressBar = event.currentTarget;
+            const rect = progressBar.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const width = rect.width;
+            const percentage = (x / width) * 100;
+            
+            document.getElementById('videoProgress').style.width = percentage + '%';
+            
+            // تحديث الوقت
+            const totalSeconds = 8*60 + 15; // 08:15
+            const currentSeconds = Math.floor((percentage / 100) * totalSeconds);
+            const minutes = Math.floor(currentSeconds / 60);
+            const seconds = currentSeconds % 60;
+            document.getElementById('timeDisplay').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')} / 08:15`;
+        }
+
+        function playSpecificLesson(lessonId) {
+            if (lessonId <= 3 || completedLessons.includes(lessonId)) {
+                currentLesson = lessonId;
+                updateLessonDisplay();
+            } else {
+                alert('هذا الدرس مقفل. يرجى إكمال الدروس السابقة أولاً.');
+            }
+        }
+
+        function checkLessonAccess(lessonId) {
+            if (completedLessons.includes(lessonId - 1)) {
+                playSpecificLesson(lessonId);
+            } else {
+                alert('يجب إكمال الدروس السابقة أولاً');
+            }
+        }
+
+        function updateLessonDisplay() {
+            const titles = {
+                1: 'مرحباً بك في الدورة',
+                2: 'كيف يعمل الويب؟',
+                3: 'تثبيت أدوات العمل (VS Code)',
+                4: 'هيكلية الصفحة (Structure)',
+                5: 'الروابط والصور'
+            };
+            
+            document.getElementById('videoTitle').innerHTML = 
+                `<i class="fas fa-play-circle" style="color: #667eea;"></i> الدرس ${currentLesson}: ${titles[currentLesson]}`;
+            
+            // تحديث القائمة النشطة
+            document.querySelectorAll('.playlist-item').forEach((item, index) => {
+                item.classList.remove('active');
+                if (index === currentLesson - 1) {
+                    item.classList.add('active');
+                }
+            });
+        }
+
+        function previousLesson() {
+            if (currentLesson > 1) {
+                currentLesson--;
+                updateLessonDisplay();
+            }
+        }
+
+        function nextLesson() {
+            if (currentLesson < 5) {
+                currentLesson++;
+                updateLessonDisplay();
+            }
+        }
+
+        function markAsCompleted() {
+            if (!completedLessons.includes(currentLesson)) {
+                completedLessons.push(currentLesson);
+                updateProgress();
+                alert('تم تحديد الدرس كمكتمل ✓');
+            }
+        }
+
+        function updateProgress() {
+            const progress = (completedLessons.length / 5) * 100;
+            document.getElementById('courseProgressFill').style.width = progress + '%';
+            document.getElementById('progressPercentage').textContent = Math.round(progress);
+        }
+
+        function addNote() {
+            const noteText = prompt('أدخل ملاحظتك:');
+            if (noteText) {
+                const currentTime = document.getElementById('timeDisplay').textContent.split(' / ')[0];
+                const notesList = document.getElementById('notesList');
+                
+                const noteItem = document.createElement('div');
+                noteItem.className = 'note-item';
+                noteItem.innerHTML = `
+                    <div class="note-time">
+                        <i class="far fa-clock"></i> ${currentTime}
+                    </div>
+                    <div class="note-text">${noteText}</div>
+                    <div class="note-actions">
+                        <span onclick="editNote(this)"><i class="far fa-edit"></i> تعديل</span>
+                        <span onclick="deleteNote(this)"><i class="far fa-trash-alt"></i> حذف</span>
+                    </div>
+                `;
+                
+                notesList.appendChild(noteItem);
+                saveNotes();
+            }
+        }
+
+        function editNote(element) {
+            const noteItem = element.closest('.note-item');
+            const noteText = noteItem.querySelector('.note-text').textContent;
+            const newText = prompt('تعديل الملاحظة:', noteText);
+            
+            if (newText) {
+                noteItem.querySelector('.note-text').textContent = newText;
+                saveNotes();
+            }
+        }
+
+        function deleteNote(element) {
+            if (confirm('هل أنت متأكد من حذف هذه الملاحظة؟')) {
+                const noteItem = element.closest('.note-item');
+                noteItem.remove();
+                saveNotes();
+            }
+        }
+
+        function saveNotes() {
+            const notes = [];
+            document.querySelectorAll('.note-item').forEach(item => {
+                notes.push({
+                    time: item.querySelector('.note-time').textContent.replace('⏱️ ', ''),
+                    text: item.querySelector('.note-text').textContent
+                });
+            });
+            localStorage.setItem('videoNotes', JSON.stringify(notes));
+        }
+
+        function loadNotes() {
+            const savedNotes = localStorage.getItem('videoNotes');
+            if (savedNotes) {
+                const notes = JSON.parse(savedNotes);
+                const notesList = document.getElementById('notesList');
+                notesList.innerHTML = '';
+                
+                notes.forEach(note => {
+                    const noteItem = document.createElement('div');
+                    noteItem.className = 'note-item';
+                    noteItem.innerHTML = `
+                        <div class="note-time">
+                            <i class="far fa-clock"></i> ${note.time}
+                        </div>
+                        <div class="note-text">${note.text}</div>
+                        <div class="note-actions">
+                            <span onclick="editNote(this)"><i class="far fa-edit"></i> تعديل</span>
+                            <span onclick="deleteNote(this)"><i class="far fa-trash-alt"></i> حذف</span>
+                        </div>
+                    `;
+                    notesList.appendChild(noteItem);
+                });
+            }
+        }
+    </script>
+</body>
+</html>

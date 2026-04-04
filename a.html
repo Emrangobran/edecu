@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصتي التعليمية</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+        }
+
+        /* === الشريط العلوي === */
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.2);
+        }
+
+        .navbar .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .navbar .nav-links a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 16px;
+            transition: opacity 0.3s;
+        }
+
+        .navbar .nav-links a:hover {
+            opacity: 0.8;
+        }
+
+        .btn {
+            padding: 10px 25px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #ee5a5a;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        /* === قسم البطل (Hero) === */
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 100px 40px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 20px;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+
+        .search-bar {
+            max-width: 600px;
+            margin: 0 auto;
+            display: flex;
+            background: white;
+            border-radius: 50px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .search-bar input {
+            flex: 1;
+            padding: 18px 25px;
+            border: none;
+            font-size: 16px;
+            outline: none;
+            direction: rtl;
+        }
+
+        .search-bar button {
+            padding: 18px 30px;
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        /* === الإحصائيات === */
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            padding: 60px 40px;
+            background: #f8f9fa;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-item .number {
+            font-size: 42px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-item .label {
+            font-size: 16px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        /* === قسم الدورات === */
+        .courses-section {
+            padding: 80px 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 36px;
+            margin-bottom: 50px;
+            color: #333;
+        }
+
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .course-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .course-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .course-card .thumbnail {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 50px;
+        }
+
+        .course-card .card-body {
+            padding: 20px;
+        }
+
+        .course-card .category {
+            background: #e8f4f8;
+            color: #667eea;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            display: inline-block;
+        }
+
+        .course-card h3 {
+            margin: 12px 0 8px;
+            font-size: 18px;
+            color: #333;
+        }
+
+        .course-card p {
+            color: #888;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .course-card .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .course-card .price {
+            font-size: 20px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .course-card .rating {
+            color: #ffc107;
+        }
+
+        /* === الفوتر === */
+        .footer {
+            background: #2d3436;
+            color: white;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .footer p {
+            opacity: 0.7;
+        }
+
+        /* === التجاوب === */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 30px; }
+            .stats { flex-direction: column; gap: 30px; }
+            .navbar { flex-direction: column; gap: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- الشريط العلوي -->
+    <nav class="navbar">
+        <div class="logo">📚 منصتي التعليمية</div>
+        <div class="nav-links">
+            <a href="#">الرئيسية</a>
+            <a href="#">الدورات</a>
+            <a href="#">المدربون</a>
+            <a href="#">من نحن</a>
+        </div>
+        <div>
+            <button class="btn btn-outline">تسجيل دخول</button>
+            <button class="btn btn-primary">إنشاء حساب</button>
+        </div>
+    </nav>
+
+    <!-- قسم البطل -->
+    <section class="hero">
+        <h1>🎓 تعلّم أي شيء، في أي وقت</h1>
+        <p>آلاف الدورات التعليمية مع أفضل المدربين العرب</p>
+        <div class="search-bar">
+            <input type="text" placeholder="ابحث عن دورة... مثلاً: البرمجة، التصميم، التسويق">
+            <button>🔍 بحث</button>
+        </div>
+    </section>
+
+    <!-- الإحصائيات -->
+    <section class="stats">
+        <div class="stat-item">
+            <div class="number">+500</div>
+            <div class="label">دورة تعليمية</div>
+        </div>
+        <div class="stat-item">
+            <div class="number">+10,000</div>
+            <div class="label">طالب مسجل</div>
+        </div>
+        <div class="stat-item">
+            <div class="number">+100</div>
+            <div class="label">مدرب محترف</div>
+        </div>
+        <div class="stat-item">
+            <div class="number">4.8 ⭐</div>
+            <div class="label">تقييم المنصة</div>
+        </div>
+    </section>
+
+    <!-- الدورات -->
+    <section class="courses-section">
+        <h2 class="section-title">🔥 أحدث الدورات</h2>
+        <div class="courses-grid">
+
+            <!-- دورة 1 -->
+            <div class="course-card">
+                <div class="thumbnail">💻</div>
+                <div class="card-body">
+                    <span class="category">برمجة</span>
+                    <h3>تعلم تطوير الويب من الصفر</h3>
+                    <p>دورة شاملة لتعلم HTML, CSS, JavaScript وبناء مواقع احترافية</p>
+                </div>
+                <div class="card-footer">
+                    <span class="price">49.99$</span>
+                    <span class="rating">⭐ 4.9 (320)</span>
+                </div>
+            </div>
+
+            <!-- دورة 2 -->
+            <div class="course-card">
+                <div class="thumbnail">🎨</div>
+                <div class="card-body">
+                    <span class="category">تصميم</span>
+                    <h3>احتراف التصميم الجرافيكي</h3>
+                    <p>تعلم أدوات Adobe Photoshop و Illustrator من البداية للاحتراف</p>
+                </div>
+                <div class="card-footer">
+                    <span class="price">39.99$</span>
+                    <span class="rating">⭐ 4.8 (215)</span>
+                </div>
+            </div>
+
+            <!-- دورة 3 -->
+            <div class="course-card">
+                <div class="thumbnail">📊</div>
+                <div class="card-body">
+                    <span class="category">تسويق</span>
+                    <h3>التسويق الرقمي الشامل</h3>
+                    <p>استراتيجيات التسويق عبر السوشيال ميديا وإعلانات جوجل</p>
+                </div>
+                <div class="card-footer">
+                    <span class="price">مجاني</span>
+                    <span class="rating">⭐ 4.7 (180)</span>
+                </div>
+            </div>
+
+            <!-- دورة 4 -->
+            <div class="course-card">
+                <div class="thumbnail">🤖</div>
+                <div class="card-body">
+                    <span class="category">ذكاء اصطناعي</span>
+                    <h3>مقدمة في الذكاء الاصطناعي</h3>
+                    <p>تعلم أساسيات AI و Machine Learning مع مشاريع عملية</p>
+                </div>
+                <div class="card-footer">
+                    <span class="price">59.99$</span>
+                    <span class="rating">⭐ 4.9 (410)</span>
+                </div>
+            </div>
+
+            <!-- دورة 5 -->
+            <div class="course-card">
+                <div class="thumbnail">📱</div>
+                <div class="card-body">
+                    <span class="category">تطبيقات</span>
+                    <h3>تطوير تطبيقات الموبايل</h3>
+                    <p>بناء تطبيقات Android و iOS باستخدام Flutter</p>
+                </div>
+                <div class="card-footer">
+                    <span class="price">44.99$</span>
+                    <span class="rating">⭐ 4.6 (150)</span>
+                </div>
+            </div>
+
+            <!-- دورة 6 -->
+            <div class="course-card">
+                <div class="thumbnail">🗣️</div>
+                <div class="card-body">
+                    <span class="category">لغات</span>
+                    <h3>تعلم اللغة الإنجليزية</h3>
+                    <p>من المستوى المبتدئ إلى المتقدم مع محادثات يومية</p>
+                </div>
+                <div class="card-footer">
+                    <span class="price">29.99$</span>
+                    <span class="rating">⭐ 4.8 (520)</span>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- الفوتر -->
+    <footer class="footer">
+        <p>📚 منصتي التعليمية © 2026 - جميع الحقوق محفوظة</p>
+    </footer>
+
+</body>
+</html>

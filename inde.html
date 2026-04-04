@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول | منصتي</title>
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --secondary: #818CF8;
+            --bg: #F3F4F6;
+            --text: #1F2937;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #eee;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 10px;
+            cursor: pointer;
+            color: #666;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+
+        .tab.active {
+            color: var(--primary);
+            border-bottom: 2px solid var(--primary);
+            margin-bottom: -2px;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+            text-align: right;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: #4B5563;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #D1D5DB;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            outline: none;
+            box-sizing: border-box; /* مهم جداً للتجاوب */
+        }
+
+        input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 1rem;
+        }
+
+        .btn:hover {
+            background: #4338CA;
+        }
+
+        .google-btn {
+            background: white;
+            color: #333;
+            border: 1px solid #D1D5DB;
+            margin-top: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .google-btn:hover {
+            background: #F9FAFB;
+        }
+
+        .toggle-text {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .toggle-text a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* إخفاء وعرض النماذج */
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <span class="logo">🎓 منصتي التعليمية</span>
+
+        <!-- التبويبات -->
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('login')">تسجيل دخول</div>
+            <div class="tab" onclick="switchTab('register')">حساب جديد</div>
+        </div>
+
+        <!-- نموذج تسجيل الدخول -->
+        <form id="loginForm">
+            <div class="form-group">
+                <label>البريد الإلكتروني</label>
+                <input type="email" placeholder="name@example.com" required>
+            </div>
+            <div class="form-group">
+                <label>كلمة المرور</label>
+                <input type="password" placeholder="********" required>
+            </div>
+            <button type="submit" class="btn">دخول</button>
+            <button type="button" class="btn google-btn">
+                <img src="https://www.svgrepo.com/show/475656/google-color.svg" width="20">
+                استمرار باستخدام Google
+            </button>
+        </form>
+
+        <!-- نموذج إنشاء حساب -->
+        <form id="registerForm" class="hidden">
+            <div class="form-group">
+                <label>الاسم الكامل</label>
+                <input type="text" placeholder="مثال: أحمد محمد" required>
+            </div>
+            <div class="form-group">
+                <label>البريد الإلكتروني</label>
+                <input type="email" placeholder="name@example.com" required>
+            </div>
+            <div class="form-group">
+                <label>نوع الحساب</label>
+                <select id="roleSelect">
+                    <option value="student">طالب (أريد أن أتعلم)</option>
+                    <option value="instructor">مدرب (أريد أن أُعَلِّم)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>كلمة المرور</label>
+                <input type="password" placeholder="********" required>
+            </div>
+            <button type="submit" class="btn">إنشاء حساب</button>
+        </form>
+
+    </div>
+
+    <script>
+        function switchTab(tabName) {
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            const tabs = document.querySelectorAll('.tab');
+
+            if (tabName === 'login') {
+                loginForm.classList.remove('hidden');
+                registerForm.classList.add('hidden');
+                tabs<a href="" class="citation-link" target="_blank" style="vertical-align: super; font-size: 0.8em; margin-left: 3px;">[0]</a>.classList.add('active');
+                tabs<a href="" class="citation-link" target="_blank" style="vertical-align: super; font-size: 0.8em; margin-left: 3px;">[1]</a>.classList.remove('active');
+            } else {
+                loginForm.classList.add('hidden');
+                registerForm.classList.remove('hidden');
+                tabs<a href="" class="citation-link" target="_blank" style="vertical-align: super; font-size: 0.8em; margin-left: 3px;">[0]</a>.classList.remove('active');
+                tabs<a href="" class="citation-link" target="_blank" style="vertical-align: super; font-size: 0.8em; margin-left: 3px;">[1]</a>.classList.add('active');
+            }
+        }
+
+        // محاكاة عملية التسجيل (للواجهة فقط)
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const role = document.getElementById('roleSelect').value;
+            alert('تم إنشاء الحساب بنجاح! سيتم توجيهك إلى لوحة تحكم: ' + (role === 'student' ? 'الطالب' : 'المدرب'));
+            // هنا سيتم توجيه المستخدم بناءً على خياره
+            // window.location.href = role === 'student' ? '/student-dashboard' : '/instructor-dashboard';
+        });
+    </script>
+
+</body>
+</html>

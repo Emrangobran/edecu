@@ -1,0 +1,375 @@
+<!-- course-details.html - تحديث الروابط مع الحفاظ على الهيكل الحالي -->
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تفاصيل الدورة | تعلم تطوير الويب</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
+        body { background-color: #f9f9f9; color: #333; }
+
+        /* الشريط العلوي */
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 15px 40px; display: flex; justify-content: space-between; align-items: center;
+            color: white; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 15px rgba(0,0,0,0.2);
+        }
+        .navbar a { text-decoration: none; color: white; }
+        .logo { font-size: 24px; font-weight: bold; }
+        .back-btn { background: rgba(255,255,255,0.2); padding: 5px 15px; border-radius: 20px; font-size: 14px; }
+
+        /* رأس الصفحة */
+        .course-header {
+            background: #2d3436; color: white; padding: 60px 40px;
+            display: flex; gap: 40px; align-items: center; flex-wrap: wrap;
+        }
+        .header-content { flex: 2; min-width: 300px; }
+        .header-media { flex: 1; min-width: 300px; }
+
+        .course-title { font-size: 36px; margin-bottom: 15px; }
+        .course-desc { font-size: 18px; margin-bottom: 20px; opacity: 0.9; line-height: 1.6; }
+        .course-meta { display: flex; gap: 20px; font-size: 14px; opacity: 0.8; margin-bottom: 20px; }
+        
+        /* بطاقة الفيديو والسعر */
+        .media-card {
+            background: white; border-radius: 10px; overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2); color: #333;
+        }
+        .video-thumbnail {
+            width: 100%; height: 200px; background: #000; display: flex;
+            align-items: center; justify-content: center; color: white; cursor: pointer; position: relative;
+        }
+        .play-icon { font-size: 50px; opacity: 0.8; transition: 0.3s; }
+        .video-thumbnail:hover .play-icon { transform: scale(1.1); opacity: 1; }
+        
+        .card-body { padding: 20px; text-align: center; }
+        .price { font-size: 32px; font-weight: bold; color: #667eea; margin-bottom: 15px; }
+        .enroll-btn {
+            background: #ff6b6b; color: white; width: 100%; padding: 15px;
+            border: none; border-radius: 5px; font-size: 18px; font-weight: bold;
+            cursor: pointer; transition: 0.3s;
+        }
+        .enroll-btn:hover { background: #ee5a5a; }
+        .guarantee { font-size: 12px; color: #666; margin-top: 10px; }
+
+        /* محتوى الدورة */
+        .container { max-width: 1100px; margin: 40px auto; padding: 0 20px; display: flex; gap: 40px; flex-wrap: wrap; }
+        .main-content { flex: 2; }
+        .sidebar { flex: 1; }
+
+        .section-title { font-size: 24px; margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+
+        /* قائمة الدروس */
+        .lesson-list { list-style: none; border: 1px solid #ddd; border-radius: 8px; overflow: hidden; }
+        .lesson-item {
+            padding: 15px 20px; border-bottom: 1px solid #eee; background: white;
+            display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: 0.2s;
+        }
+        .lesson-item:last-child { border-bottom: none; }
+        .lesson-item:hover { background: #f8f9fa; }
+        .lesson-info { display: flex; align-items: center; gap: 10px; }
+        .lesson-icon { color: #667eea; }
+        .lesson-duration { font-size: 13px; color: #888; }
+        .locked { color: #aaa; }
+
+        /* بطاقة المدرب */
+        .instructor-card { background: white; padding: 20px; border-radius: 8px; border: 1px solid #ddd; }
+        .instructor-header { display: flex; gap: 15px; align-items: center; margin-bottom: 15px; }
+        .instructor-img { width: 60px; height: 60px; border-radius: 50%; background: #ddd; }
+        .instructor-bio { font-size: 14px; color: #666; line-height: 1.5; }
+
+        @media (max-width: 768px) {
+            .course-header { flex-direction: column-reverse; padding: 30px 20px; }
+            .container { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- الشريط العلوي -->
+    <nav class="navbar">
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <a href="index.html" class="logo">📚 منصتي</a>
+            <a href="index.html" class="back-btn">⟵ عودة للرئيسية</a>
+        </div>
+        <div id="user-area"></div> 
+    </nav>
+
+    <!-- رأس الدورة -->
+    <header class="course-header">
+        <div class="header-content">
+            <h1 class="course-title">تعلم تطوير الويب الشامل (Full Stack)</h1>
+            <p class="course-desc">ابدأ رحلتك لتصبح مطور ويب محترف. تعلم HTML, CSS, JavaScript, React, Node.js من الصفر حتى الاحتراف مع مشاريع عملية.</p>
+            <div class="course-meta">
+                <span>⭐ 4.8 (1.2k تقييم)</span>
+                <span>👨‍🎓 15,400 طالب</span>
+                <span>📅 آخر تحديث: فبراير 2026</span>
+                <span>🌐 اللغة: العربية</span>
+            </div>
+        </div>
+
+        <!-- بطاقة الشراء -->
+        <div class="header-media">
+            <div class="media-card">
+                <div class="video-thumbnail" onclick="playPreview()">
+                    <span class="play-icon">▶</span>
+                </div>
+                <div class="card-body">
+                    <div class="price">49.99$</div>
+                    <button class="enroll-btn" onclick="enrollCourse()" id="enrollBtn">اشترك الآن</button>
+                    <p class="guarantee">ضمان استرداد الأموال لمدة 30 يوم</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- محتوى الصفحة -->
+    <div class="container">
+        
+        <!-- القسم الرئيسي: المنهج -->
+        <div class="main-content">
+            <h2 class="section-title">📚 محتوى الدورة</h2>
+            
+            <ul class="lesson-list">
+                <!-- القسم 1 -->
+                <li class="lesson-item" style="background:#f1f3f5; font-weight:bold;">
+                    <span>القسم 1: المقدمة والأساسيات</span>
+                    <span style="font-size:12px">3 دروس</span>
+                </li>
+                <li class="lesson-item" onclick="playLesson(1)">
+                    <div class="lesson-info">
+                        <span class="lesson-icon">🎥</span>
+                        <span>مرحباً بك في الدورة</span>
+                    </div>
+                    <span class="lesson-duration">05:00</span>
+                </li>
+                <li class="lesson-item" onclick="playLesson(2)">
+                    <div class="lesson-info">
+                        <span class="lesson-icon">🎥</span>
+                        <span>كيف يعمل الويب؟</span>
+                    </div>
+                    <span class="lesson-duration">12:30</span>
+                </li>
+                <li class="lesson-item" onclick="playLesson(3)">
+                    <div class="lesson-info">
+                        <span class="lesson-icon">🎥</span>
+                        <span>تثبيت أدوات العمل (VS Code)</span>
+                    </div>
+                    <span class="lesson-duration">08:15</span>
+                </li>
+
+                <!-- القسم 2 -->
+                <li class="lesson-item" style="background:#f1f3f5; font-weight:bold; margin-top:10px;">
+                    <span>القسم 2: لغة HTML</span>
+                    <span style="font-size:12px">2 دروس</span>
+                </li>
+                <li class="lesson-item locked" onclick="checkAccess(4)">
+                    <div class="lesson-info">
+                        <span class="lesson-icon">🔒</span>
+                        <span>هيكلية الصفحة (Structure)</span>
+                    </div>
+                    <span class="lesson-duration">15:00</span>
+                </li>
+                <li class="lesson-item locked" onclick="checkAccess(5)">
+                    <div class="lesson-info">
+                        <span class="lesson-icon">🔒</span>
+                        <span>الروابط والصور</span>
+                    </div>
+                    <span class="lesson-duration">20:45</span>
+                </li>
+            </ul>
+
+            <br>
+            <h2 class="section-title">📝 متطلبات الدورة</h2>
+            <ul style="list-style: disc; padding-right: 20px; line-height: 1.8; color: #555;">
+                <li>لا تحتاج لخبرة سابقة في البرمجة.</li>
+                <li>جهاز كمبيوتر (Windows أو Mac).</li>
+                <li>اتصال بالإنترنت.</li>
+                <li>شغف للتعلم!</li>
+            </ul>
+        </div>
+
+        <!-- الشريط الجانبي: المدرب -->
+        <aside class="sidebar">
+            <h2 class="section-title">👨‍🏫 عن المدرب</h2>
+            <div class="instructor-card" onclick="viewInstructorProfile()" style="cursor: pointer;">
+                <div class="instructor-header">
+                    <div class="instructor-img" style="display:flex; justify-content:center; align-items:center; font-size:24px;">👨‍💻</div>
+                    <div>
+                        <div style="font-weight:bold;">أحمد محمد</div>
+                        <div style="font-size:12px; color:#667eea;">مطور برمجيات أول</div>
+                    </div>
+                </div>
+                <p class="instructor-bio">
+                    مهندس برمجيات بخبرة 10 سنوات في شركات عالمية. قام بتدريب أكثر من 50 ألف طالب حول العالم في مجال تطوير الويب والذكاء الاصطناعي.
+                </p>
+                <div style="margin-top: 10px; text-align: left;">
+                    <span style="color: #667eea; font-size: 13px;">عرض الملف الشخصي ←</span>
+                </div>
+            </div>
+            
+            <!-- روابط سريعة -->
+            <div style="margin-top: 20px; background: white; padding: 15px; border-radius: 8px; border: 1px solid #ddd;">
+                <h3 style="font-size: 16px; margin-bottom: 10px;">روابط سريعة</h3>
+                <ul style="list-style: none;">
+                    <li style="margin-bottom: 8px;"><a href="index.html" style="text-decoration: none; color: #667eea;">🏠 الرئيسية</a></li>
+                    <li style="margin-bottom: 8px;"><a href="#" onclick="goToProfile()" style="text-decoration: none; color: #667eea;">👤 ملفي الشخصي</a></li>
+                    <li style="margin-bottom: 8px;"><a href="#" onclick="goToDashboard()" style="text-decoration: none; color: #667eea;" id="dashboardLink">📊 لوحة التحكم</a></li>
+                </ul>
+            </div>
+        </aside>
+
+    </div>
+
+    <!-- الفوتر -->
+    <footer style="background:#2d3436; color:white; text-align:center; padding:20px; margin-top:40px;">
+        <p>📚 منصتي التعليمية © 2026</p>
+        <div style="margin-top: 10px; font-size: 12px;">
+            <a href="index.html" style="color: white; text-decoration: none; margin: 0 10px;">الرئيسية</a>
+            <a href="#" onclick="goToProfile()" style="color: white; text-decoration: none; margin: 0 10px;">الملف الشخصي</a>
+            <a href="login.html" style="color: white; text-decoration: none; margin: 0 10px;">تسجيل الدخول</a>
+        </div>
+    </footer>
+
+    <script>
+        // التحقق من حالة تسجيل الدخول
+        window.onload = function() {
+            updateUserArea();
+            checkEnrollmentStatus();
+            checkUserRole();
+        }
+
+        function updateUserArea() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const userArea = document.getElementById('user-area');
+
+            if (isLoggedIn === 'true') {
+                const userName = localStorage.getItem('userName');
+                const userRole = localStorage.getItem('userRole');
+                
+                let roleIcon = userRole === 'مدرب' ? '👨‍🏫' : '👨‍🎓';
+                
+                userArea.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <span style="font-weight:bold;">مرحباً، ${userName}</span>
+                        <div onclick="goToProfile()" style="display: flex; align-items: center; gap: 10px; cursor: pointer; background: rgba(255,255,255,0.2); padding: 5px 15px; border-radius: 20px;">
+                            <span>${roleIcon}</span>
+                            <span>${userRole || 'طالب'}</span>
+                        </div>
+                    </div>
+                `;
+            } else {
+                userArea.innerHTML = '<a href="login.html" style="background:rgba(255,255,255,0.2); padding:5px 15px; border-radius:20px;">تسجيل دخول</a>';
+            }
+        }
+
+        function goToProfile() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            if (isLoggedIn === 'true') {
+                const userRole = localStorage.getItem('userRole');
+                if (userRole === 'مدرب') {
+                    window.location.href = 'instructor-dashboard.html';
+                } else {
+                    window.location.href = 'profile.html';
+                }
+            } else {
+                if(confirm('يجب تسجيل الدخول أولاً. هل تريد الانتقال إلى صفحة تسجيل الدخول؟')) {
+                    window.location.href = 'login.html';
+                }
+            }
+        }
+
+        function goToDashboard() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const userRole = localStorage.getItem('userRole');
+            
+            if (isLoggedIn === 'true' && userRole === 'مدرب') {
+                window.location.href = 'instructor-dashboard.html';
+            } else if (isLoggedIn === 'true') {
+                window.location.href = 'profile.html';
+            } else {
+                window.location.href = 'login.html';
+            }
+        }
+
+        function viewInstructorProfile() {
+            window.location.href = 'profile.html?instructor=ahmed';
+        }
+
+        function checkUserRole() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const userRole = localStorage.getItem('userRole');
+            const dashboardLink = document.getElementById('dashboardLink');
+            
+            if (isLoggedIn === 'true' && userRole === 'مدرب') {
+                dashboardLink.innerHTML = '📊 لوحة تحكم المدرب';
+            } else if (isLoggedIn === 'true') {
+                dashboardLink.innerHTML = '👤 ملفي الشخصي';
+            }
+        }
+
+        function checkEnrollmentStatus() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const enrolledCourses = JSON.parse(localStorage.getItem('enrolledCourses') || '[]');
+            
+            // نعتبر أن هذه الدورة هي course1
+            if (isLoggedIn === 'true' && enrolledCourses.includes('course1')) {
+                document.getElementById('enrollBtn').innerText = 'مشاهدة الدورة';
+                document.getElementById('enrollBtn').style.background = '#4CAF50';
+            }
+        }
+
+        function playPreview() {
+            window.location.href = 'video-player.html?preview=true';
+        }
+
+        function playLesson(lessonId) {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            
+            if (isLoggedIn === 'true') {
+                window.location.href = `video-player.html?lesson=${lessonId}`;
+            } else {
+                if(confirm('يجب تسجيل الدخول أولاً لمشاهدة الدرس. هل تريد الانتقال إلى صفحة تسجيل الدخول؟')) {
+                    window.location.href = 'login.html';
+                }
+            }
+        }
+
+        function checkAccess(lessonId) {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const enrolledCourses = JSON.parse(localStorage.getItem('enrolledCourses') || '[]');
+            
+            if (isLoggedIn !== 'true') {
+                if(confirm('يجب تسجيل الدخول أولاً. هل تريد الانتقال إلى صفحة تسجيل الدخول؟')) {
+                    window.location.href = 'login.html';
+                }
+            } else if (!enrolledCourses.includes('course1')) {
+                if(confirm('هذا الدرس مقفل. يجب الاشتراك في الدورة أولاً. هل تريد الاشتراك الآن؟')) {
+                    enrollCourse();
+                }
+            } else {
+                window.location.href = `video-player.html?lesson=${lessonId}`;
+            }
+        }
+
+        function enrollCourse() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            
+            if (isLoggedIn === 'true') {
+                let enrolledCourses = JSON.parse(localStorage.getItem('enrolledCourses') || '[]');
+                if (!enrolledCourses.includes('course1')) {
+                    enrolledCourses.push('course1');
+                    localStorage.setItem('enrolledCourses', JSON.stringify(enrolledCourses));
+                }
+                alert('🎉 تم تسجيلك في الدورة بنجاح!');
+                window.location.href = 'video-player.html';
+            } else {
+                if(confirm('يجب عليك تسجيل الدخول أولاً للاشتراك. هل تريد الذهاب لصفحة الدخول؟')) {
+                    window.location.href = 'login.html';
+                }
+            }
+        }
+    </script>
+</body>
+</html>

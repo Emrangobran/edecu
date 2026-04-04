@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصتي التعليمية - تعلم بذكاء</title>
+    <!-- إضافة Favicon -->
+    <link rel="icon" type="image/x-icon" href="https://img.icons8.com/color/48/000000/book--v1.png">
+    <!-- إضافة Font Awesome للأيقونات -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
+
+        /* === الشريط العلوي === */
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 15px 40px;
+            display: flex; justify-content: space-between; align-items: center;
+            color: white; position: sticky; top: 0; z-index: 1000;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.2);
+        }
+        .navbar .logo { 
+            font-size: 24px; font-weight: bold; text-decoration: none; color: white; 
+            display: flex; align-items: center; gap: 10px;
+        }
+        .navbar .nav-links a { color: white; text-decoration: none; margin: 0 15px; font-size: 16px; transition: opacity 0.3s; }
+        .navbar .nav-links a:hover { opacity: 0.8; }
+
+        .btn { padding: 10px 25px; border: none; border-radius: 25px; cursor: pointer; font-size: 16px; transition: all 0.3s; text-decoration: none; display: inline-block; }
+        .btn-primary { background: #ff6b6b; color: white; }
+        .btn-primary:hover { background: #ee5a5a; transform: translateY(-2px); }
+        .btn-outline { background: transparent; color: white; border: 2px solid white; }
+        .btn-outline:hover { background: rgba(255,255,255,0.1); }
+
+        /* قائمة المستخدم (بعد الدخول) */
+        .user-menu { display: none; align-items: center; gap: 15px; cursor: pointer; padding: 5px 10px; border-radius: 40px; background: rgba(255,255,255,0.1); transition: 0.3s; }
+        .user-menu:hover { background: rgba(255,255,255,0.2); }
+        .avatar { 
+            width: 40px; height: 40px; background: white; color: #667eea; 
+            border-radius: 50%; display: flex; align-items: center; 
+            justify-content: center; font-weight: bold; font-size: 18px;
+        }
+        .user-info { display: flex; flex-direction: column; align-items: flex-start; }
+        .user-name { font-size: 14px; font-weight: bold; }
+        .user-role { font-size: 10px; opacity: 0.8; }
+
+        /* === قسم البطل (Hero) === */
+        .hero { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 100px 40px; text-align: center; }
+        .hero h1 { font-size: 48px; margin-bottom: 20px; }
+        .hero p { font-size: 20px; margin-bottom: 40px; opacity: 0.9; }
+
+        .search-bar { max-width: 600px; margin: 0 auto; display: flex; background: white; border-radius: 50px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        .search-bar input { flex: 1; padding: 18px 25px; border: none; font-size: 16px; outline: none; direction: rtl; }
+        .search-bar button { 
+            padding: 18px 30px; background: #ff6b6b; color: white; 
+            border: none; cursor: pointer; font-size: 16px; transition: 0.3s;
+        }
+        .search-bar button:hover { background: #ee5a5a; }
+
+        /* === الإحصائيات === */
+        .stats { display: flex; justify-content: center; gap: 60px; padding: 60px 40px; background: #f8f9fa; }
+        .stat-item { text-align: center; }
+        .stat-item .number { font-size: 42px; font-weight: bold; color: #667eea; }
+        .stat-item .label { font-size: 16px; color: #666; margin-top: 5px; }
+
+        /* === قسم الدورات === */
+        .courses-section { padding: 80px 40px; max-width: 1200px; margin: 0 auto; }
+        .section-title { text-align: center; font-size: 36px; margin-bottom: 50px; color: #333; position: relative; }
+        .section-title:after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: #667eea;
+            margin: 15px auto 0;
+            border-radius: 2px;
+        }
+        .courses-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px; }
+        .course-card { 
+            background: white; border-radius: 15px; overflow: hidden; 
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1); transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+        .course-card:hover { transform: translateY(-8px); box-shadow: 0 15px 40px rgba(0,0,0,0.15); }
+        .course-card .thumbnail { 
+            width: 100%; height: 180px; object-fit: cover; 
+            background: linear-gradient(45deg, #667eea, #764ba2); 
+            display: flex; align-items: center; justify-content: center; 
+            color: white; font-size: 50px;
+        }
+        .course-card .card-body { padding: 20px; }
+        .course-card .category { 
+            background: #e8f4f8; color: #667eea; padding: 5px 12px; 
+            border-radius: 15px; font-size: 12px; display: inline-block;
+        }
+        .course-card h3 { margin: 12px 0 8px; font-size: 18px; color: #333; }
+        .course-card p { color: #888; font-size: 14px; line-height: 1.6; margin-bottom: 15px; }
+        .course-card .card-footer { 
+            display: flex; justify-content: space-between; align-items: center; 
+            padding: 15px 20px; border-top: 1px solid #eee;
+        }
+        .course-card .price { font-size: 20px; font-weight: bold; color: #667eea; }
+        .course-card .rating { color: #ffc107; }
+        .rating-value { color: #666; margin-right: 5px; }
+
+        /* === الفوتر === */
+        .footer { background: #2d3436; color: white; text-align: center; padding: 40px; }
+        .footer p { opacity: 0.7; }
+
+        /* === تحميل مؤقت (Skeleton Loading) === */
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 30px; }
+            .stats { flex-direction: column; gap: 30px; }
+            .navbar { flex-direction: column; gap: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- الشريط العلوي -->
+    <nav class="navbar">
+        <a href="index.html" class="logo">
+            <i class="fas fa-graduation-cap"></i>
+            منصتي التعليمية
+        </a>
+        <div class="nav-links">
+            <a href="#"><i class="fas fa-home"></i> الرئيسية</a>
+            <a href="#"><i class="fas fa-book-open"></i> الدورات</a>
+            <a href="#"><i class="fas fa-chalkboard-teacher"></i> المدربون</a>
+            <a href="#"><i class="fas fa-info-circle"></i> من نحن</a>
+        </div>
+        
+        <!-- أزرار الزوار -->
+        <div id="guest-buttons">
+            <a href="login.html?mode=login" class="btn btn-outline">
+                <i class="fas fa-sign-in-alt"></i> تسجيل دخول
+            </a>
+            <a href="login.html?mode=register" class="btn btn-primary">
+                <i class="fas fa-user-plus"></i> إنشاء حساب
+            </a>
+        </div>
+
+        <!-- قائمة المستخدم (تظهر بعد الدخول) -->
+        <div id="user-menu" class="user-menu" onclick="logout()">
+            <div class="user-info">
+                <span id="user-name" class="user-name">مستخدم</span>
+                <span id="user-role" class="user-role">طالب</span>
+            </div>
+            <div class="avatar" id="user-avatar">👤</div>
+        </div>
+    </nav>
+
+    <!-- قسم البطل -->
+    <section class="hero">
+        <h1><i class="fas fa-rocket"></i> تعلّم أي شيء، في أي وقت</h1>
+        <p>آلاف الدورات التعليمية مع أفضل المدربين العرب</p>
+        <div class="search-bar">
+            <input type="text" placeholder="ابحث عن دورة... مثلاً: البرمجة، التصميم، التسويق">
+            <button><i class="fas fa-search"></i> بحث</button>
+        </div>
+    </section>
+
+    <!-- الإحصائيات -->
+    <section class="stats">
+        <div class="stat-item">
+            <div class="number">+500</div>
+            <div class="label"><i class="fas fa-book"></i> دورة تعليمية</div>
+        </div>
+        <div class="stat-item">
+            <div class="number">+10,000</div>
+            <div class="label"><i class="fas fa-users"></i> طالب مسجل</div>
+        </div>
+        <div class="stat-item">
+            <div class="number">+100</div>
+            <div class="label"><i class="fas fa-chalkboard-teacher"></i> مدرب محترف</div>
+        </div>
+        <div class="stat-item">
+            <div class="number">4.8 <i class="fas fa-star" style="color: #ffc107;"></i></div>
+            <div class="label">تقييم المنصة</div>
+        </div>
+    </section>
+
+    <!-- الدورات -->
+    <section class="courses-section">
+        <h2 class="section-title">
+            <i class="fas fa-fire"></i> أحدث الدورات
+        </h2>
+        <div class="courses-grid" id="courses-grid">
+            <!-- دورة 1 -->
+            <div class="course-card" onclick="window.location.href='course-details.html'">
+                <div class="thumbnail">
+                    <i class="fas fa-code"></i>
+                </div>
+                <div class="card-body">
+                    <span class="category"><i class="fas fa-laptop-code"></i> برمجة</span>
+                    <h3>تعلم تطوير الويب من الصفر</h3>
+                    <p>دورة شاملة لتعلم HTML, CSS, JavaScript وبناء مواقع احترافية</p>
+                </div>
+                <div class="card-footer">
+                    <span class="price">49.99$</span>
+                    <span class="rating">
+                        <i class="fas fa-star"></i>
+                        <span class="rating-value">4.9 (320)</span>
+                    </span>
+                </div>
+            </div>
+            
+            <!-- دورة 2 -->
+            <div class="course-card">
+                <div class="thumbnail">
+                    <i class="fas fa-paint-brush"></i>
+                </div>
+                <div class="card-body">
+                    <span class="category"><i class="fas fa-palette"></i> تصميم</span>
+                    <h3>احتراف التصميم الجرافيكي</h3>
+                    <p>تعلم أدوات Adobe Photoshop و Illustrator من البداية للاحتراف</p>
+                </div>
+                <div class="card-footer">
+                    <span class="price">39.99$</span>
+                    <span class="rating">
+                        <i class="fas fa-star"></i>
+                        <span class="rating-value">4.8 (215)</span>
+                    </span>
+                </div>
+            </div>
+            
+            <!-- دورة 3 -->
+            <div class="course-card">
+                <div class="thumbnail">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="card-body">
+                    <span class="category"><i class="fas fa-brain"></i> ذكاء اصطناعي</span>
+                    <h3>مقدمة في الذكاء الاصطناعي</h3>
+                    <p>تعلم أساسيات AI و Machine Learning مع مشاريع عملية</p>
+                </div>
+                <div class="card-footer">
+                    <span class="price">59.99$</span>
+                    <span class="rating">
+                        <i class="fas fa-star"></i>
+                        <span class="rating-value">4.9 (410)</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- الفوتر -->
+    <footer class="footer">
+        <p>
+            <i class="fas fa-graduation-cap"></i> منصتي التعليمية © 2026 
+            <br>
+            <span style="font-size: 12px; opacity: 0.5;">جميع الحقوق محفوظة</span>
+        </p>
+    </footer>
+
+    <script>
+        // التحقق من حالة تسجيل الدخول
+        window.onload = function() {
+            updateUIForUser();
+        }
+
+        function updateUIForUser() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const userName = localStorage.getItem('userName');
+            const userRole = localStorage.getItem('userRole') || 'طالب';
+
+            const guestButtons = document.getElementById('guest-buttons');
+            const userMenu = document.getElementById('user-menu');
+            const userNameSpan = document.getElementById('user-name');
+            const userRoleSpan = document.getElementById('user-role');
+
+            if (isLoggedIn === 'true') {
+                guestButtons.style.display = 'none';
+                userMenu.style.display = 'flex';
+                userNameSpan.innerText = userName || 'مستخدم';
+                userRoleSpan.innerText = userRole;
+                
+                // تحديث الأفاتار (أول حرف من الاسم)
+                const avatar = document.getElementById('user-avatar');
+                if (userName) {
+                    avatar.innerText = userName.charAt(0);
+                }
+            } else {
+                guestButtons.style.display = 'block';
+                userMenu.style.display = 'none';
+            }
+        }
+
+        function logout() {
+            if(confirm('👋 هل أنت متأكد من تسجيل الخروج؟')) {
+                localStorage.removeItem('isLoggedIn');
+                localStorage.removeItem('userName');
+                localStorage.removeItem('userRole');
+                window.location.reload();
+            }
+        }
+
+        // إضافة تأثير تحميل للدورات (محاكاة)
+        function showLoadingSkeleton() {
+            const grid = document.getElementById('courses-grid');
+            grid.innerHTML = '';
+            for (let i = 0; i < 3; i++) {
+                const skeletonCard = document.createElement('div');
+                skeletonCard.className = 'course-card skeleton';
+                skeletonCard.style.height = '300px';
+                grid.appendChild(skeletonCard);
+            }
+            
+            // بعد ثانيتين، نعرض المحتوى الحقيقي
+            setTimeout(() => {
+                location.reload(); // في الحقيقة هنا سنحمل البيانات من API
+            }, 2000);
+        }
+
+        // تفعيل البحث عند الضغط على Enter
+        document.querySelector('.search-bar input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                alert('🔍 جاري البحث عن: ' + this.value);
+            }
+        });
+    </script>
+</body>
+</html>

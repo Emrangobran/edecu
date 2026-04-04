@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ملفي الشخصي | منصتي</title>
+    <link rel="icon" type="image/x-icon" href="https://img.icons8.com/color/48/000000/book--v1.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
+        body { background: #f5f5f5; }
+
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 15px 40px; display: flex; justify-content: space-between; align-items: center;
+            color: white; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 15px rgba(0,0,0,0.2);
+        }
+        .navbar a { text-decoration: none; color: white; }
+        .logo { 
+            font-size: 24px; font-weight: bold; 
+            display: flex; align-items: center; gap: 10px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        /* غلاف الصفحة الشخصية */
+        .profile-cover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 200px;
+            border-radius: 15px 15px 0 0;
+            position: relative;
+        }
+
+        .profile-header {
+            background: white;
+            border-radius: 0 0 15px 15px;
+            padding: 0 30px 30px;
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .profile-avatar {
+            position: absolute;
+            top: -75px;
+            right: 50px;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 5px solid white;
+            background: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .avatar-edit {
+            position: absolute;
+            bottom: 10px;
+            right: 50%;
+            transform: translateX(50%);
+            background: #667eea;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: 3px solid white;
+            font-size: 14px;
+        }
+
+        .profile-info {
+            padding-top: 80px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .profile-name-section h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+
+        .profile-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        .profile-stats {
+            display: flex;
+            gap: 30px;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .edit-profile-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.3s;
+        }
+
+        .edit-profile-btn:hover {
+            background: #5a6fd1;
+            transform: translateY(-2px);
+        }
+
+        /* تبويبات الملف الشخصي */
+        .profile-tabs {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .profile-tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            color: #666;
+            transition: 0.3s;
+            border-radius: 20px;
+        }
+
+        .profile-tab.active {
+            background: #667eea;
+            color: white;
+        }
+
+        /* محتوى التبويبات */
+        .tab-content {
+            margin-top: 30px;
+        }
+
+        .tab-pane {
+            display: none;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        /* بطاقات الدورات */
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .course-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .course-progress {
+            padding: 15px;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #667eea;
+            border-radius: 4px;
+        }
+
+        .course-footer {
+            padding: 15px;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .continue-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        /* قائمة الإنجازات */
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .achievement-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .achievement-icon {
+            width: 60px;
+            height: 60px;
+            background: #f0f0f0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 24px;
+            color: #667eea;
+        }
+
+        .achievement-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .achievement-date {
+            font-size: 12px;
+            color: #888;
+        }
+
+        @media (max-width: 768px) {
+            .profile-info {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+            
+            .profile-avatar {
+                right: 50%;
+                transform: translateX(50%);
+            }
+            
+            .profile-stats {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <a href="index.html" class="logo">
+                <i class="fas fa-graduation-cap"></i> منصتي
+            </a>
+        </div>
+        <div id="user-area"></div>
+    </nav>
+
+    <div class="container">
+        <!-- غلاف الصفحة الشخصية -->
+        <div class="profile-cover"></div>
+        
+        <div class="profile-header">
+            <div class="profile-avatar">
+                <img src="https://i.pravatar.cc/150?u=ahmed" alt="الصورة الشخصية">
+                <div class="avatar-edit" onclick="alert('تغيير الصورة الشخصية')">
+                    <i class="fas fa-camera"></i>
+                </div>
+            </div>
+
+            <div class="profile-info">
+                <div class="profile-name-section">
+                    <h1>أحمد محمد <span class="profile-badge"><i class="fas fa-check-circle"></i> حساب موثق</span></h1>
+                    <p style="color: #666;"><i class="fas fa-envelope"></i> ahmed@example.com</p>
+                    <p style="color: #666;"><i class="fas fa-calendar"></i> عضو منذ يناير 2026</p>
+                </div>
+
+                <div class="profile-stats">
+                    <div class="stat">
+                        <div class="stat-number">12</div>
+                        <div class="stat-label">الدورات المسجلة</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">8</div>
+                        <div class="stat-label">الدورات المكتملة</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">156</div>
+                        <div class="stat-label">ساعات التعلم</div>
+                    </div>
+                </div>
+
+                <button class="edit-profile-btn" onclick="alert('فتح نافذة تعديل الملف الشخصي')">
+                    <i class="fas fa-edit"></i> تعديل الملف الشخصي
+                </button>
+            </div>
+
+            <!-- تبويبات الملف الشخصي -->
+            <div class="profile-tabs">
+                <div class="profile-tab active" onclick="switchProfileTab('courses')">
+                    <i class="fas fa-book-open"></i> دوراتي
+                </div>
+                <div class="profile-tab" onclick="switchProfileTab('achievements')">
+                    <i class="fas fa-trophy"></i> الإنجازات
+                </div>
+                <div class="profile-tab" onclick="switchProfileTab('settings')">
+                    <i class="fas fa-cog"></i> الإعدادات
+                </div>
+                <div class="profile-tab" onclick="switchProfileTab('certificates')">
+                    <i class="fas fa-certificate"></i> الشهادات
+                </div>
+            </div>
+        </div>
+
+        <!-- محتوى التبويبات -->
+        <div class="tab-content">
+            <!-- تبويب الدورات -->
+            <div class="tab-pane active" id="courses-tab">
+                <h2 style="margin-bottom: 20px;"><i class="fas fa-play-circle"></i> الدورات الجاري دراسةها</h2>
+                <div class="courses-grid">
+                    <div class="course-card">
+                        <img src="https://via.placeholder.com/300x150/667eea/ffffff?text=Web+Development" style="width: 100%; height: 150px; object-fit: cover;">
+                        <div class="course-progress">
+                            <div class="progress-header">
+                                <span>تطوير الويب الشامل</span>
+                                <span>35%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 35%"></div>
+                            </div>
+                        </div>
+                        <div class="course-footer">
+                            <span><i class="fas fa-clock"></i> آخر مشاهدة: الدرس 3</span>
+                            <button class="continue-btn" onclick="window.location.href='video-player.html'">
+                                <i class="fas fa-play"></i> متابعة
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="course-card">
+                        <img src="https://via.placeholder.com/300x150/764ba2/ffffff?text=JavaScript" style="width: 100%; height: 150px; object-fit: cover;">
+                        <div class="course-progress">
+                            <div class="progress-header">
+                                <span>جافاسكريبت المتقدم</span>
+                                <span>60%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 60%"></div>
+                            </div>
+                        </div>
+                        <div class="course-footer">
+                            <span><i class="fas fa-clock"></i> آخر مشاهدة: الدرس 12</span>
+                            <button class="continue-btn" onclick="window.location.href='video-player.html'">
+                                <i class="fas fa-play"></i> متابعة
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <h2 style="margin: 40px 0 20px;"><i class="fas fa-check-circle" style="color: #4caf50;"></i> الدورات المكتملة</h2>
+                <div class="courses-grid">
+                    <div class="course-card">
+                        <img src="https://via.placeholder.com/300x150/4caf50/ffffff?text=HTML+CSS" style="width: 100%; height: 150px; object-fit: cover;">
+                        <div class="course-progress">
+                            <div class="progress-header">
+                                <span>أساسيات HTML و CSS</span>
+                                <span>100%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 100%; background: #4caf50;"></div>
+                            </div>
+                        </div>
+                        <div class="course-footer">
+                            <span><i class="fas fa-trophy" style="color: #ffc107;"></i> شهادة</span>
+                            <button class="continue-btn" style="background: #4caf50;" onclick="alert('عرض الشهادة')">
+                                <i class="fas fa-certificate"></i> عرض الشهادة
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- تبويب الإنجازات -->
+            <div class="tab-pane" id="achievements-tab">
+                <h2 style="margin-bottom: 20px;"><i class="fas fa-medal"></i> إنجازاتي</h2>
+                <div class="achievements-grid">
+                    <div class="achievement-card">
+                        <div class="achievement-icon">
+                            <i class="fas fa-rocket"></i>
+                        </div>
+                        <div class="achievement-title">بداية سريعة</div>
+                        <div class="achievement-date">أكملت أول دورة</div>
+                    </div>
+                    <div class="achievement-card">
+                        <div class="achievement-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="achievement-title">نجم التعلم</div>
+                        <div class="achievement-date">50 ساعة تعلم</div>
+                    </div>
+                    <div class="achievement-card">
+                        <div class="achievement-icon">
+                            <i class="fas fa-fire"></i>
+                        </div>
+                        <div class="achievement-title">التحدي الأسبوعي</div>
+                        <div class="achievement-date">تعلمت 7 أيام متتالية</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- تبويب الإعدادات -->
+            <div class="tab-pane" id="settings-tab">
+                <div style="background: white; padding: 30px; border-radius: 10px;">
+                    <h3 style="margin-bottom: 20px;">الإعدادات العامة</h3>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; margin-bottom: 8px;">البريد الإلكتروني</label>
+                        <input type="email" value="ahmed@example.com" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; margin-bottom: 8px;">اللغة المفضلة</label>
+                        <select style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                            <option>العربية</option>
+                            <option>English</option>
+                        </select>
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; margin-bottom: 8px;">كلمة المرور الجديدة</label>
+                        <input type="password" placeholder="******" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                    </div>
+
+                    <button class="edit-profile-btn" onclick="alert('تم حفظ الإعدادات')">
+                        <i class="fas fa-save"></i> حفظ التغييرات
+                    </button>
+                </div>
+            </div>
+
+            <!-- تبويب الشهادات -->
+            <div class="tab-pane" id="certificates-tab">
+                <div style="background: white; padding: 30px; border-radius: 10px; text-align: center;">
+                    <i class="fas fa-certificate" style="font-size: 60px; color: #667eea; margin-bottom: 20px;"></i>
+                    <h3>لا توجد شهادات بعد</h3>
+                    <p style="color: #666; margin: 10px 0;">أكمل الدورات للحصول على شهادات معتمدة</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.onload = function() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            
+            if (isLoggedIn !== 'true') {
+                window.location.href = 'login.html';
+            }
+            
+            const userName = localStorage.getItem('userName');
+            const userArea = document.getElementById('user-area');
+            
+            userArea.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 10px; cursor: pointer;" onclick="window.location.href='profile.html'">
+                    <span style="font-weight:bold;">👋 ${userName}</span>
+                    <img src="https://i.pravatar.cc/40?u=${userName}" style="width: 40px; height: 40px; border-radius: 50%;">
+                </div>
+            `;
+        }
+
+        function switchProfileTab(tabName) {
+            // إزالة active من كل التبويبات
+            document.querySelectorAll('.profile-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // إخفاء كل المحتويات
+            document.querySelectorAll('.tab-pane').forEach(pane => {
+                pane.classList.remove('active');
+            });
+            
+            // تفعيل التبويب المختار
+            if (tabName === 'courses') {
+                document.querySelectorAll('.profile-tab')[0].classList.add('active');
+                document.getElementById('courses-tab').classList.add('active');
+            } else if (tabName === 'achievements') {
+                document.querySelectorAll('.profile-tab')[1].classList.add('active');
+                document.getElementById('achievements-tab').classList.add('active');
+            } else if (tabName === 'settings') {
+                document.querySelectorAll('.profile-tab')[2].classList.add('active');
+                document.getElementById('settings-tab').classList.add('active');
+            } else if (tabName === 'certificates') {
+                document.querySelectorAll('.profile-tab')[3].classList.add('active');
+                document.getElementById('certificates-tab').classList.add('active');
+            }
+        }
+    </script>
+</body>
+</html>
