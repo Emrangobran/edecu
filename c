@@ -1,4 +1,4 @@
-name: CI/CD Pipeline
+name: CI Pipeline
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
 
     steps:
@@ -18,8 +18,5 @@ jobs:
         python-version: '3.10'
 
     - run: pip install pytest
-    - run: pytest
 
-    # 🐳 Docker build
-    - name: Build Docker Image
-      run: docker build -t my-app .
+    - run: pytest
